@@ -28,29 +28,44 @@ class Board extends Component {
   state = {
     board: [
       [1, 2, 3, 4],
-      [1, 2, 3, 4],
-      [1, 2, 3, 4],
-      [1, 2, 3, 4]
+      [3, 4, 0, 0],
+      [2, 0, 4, 0],
+      [4, 0, 0, 2]
     ],
     isInitial: [
+      [true, true, true, true],
+      [true, true, false, false],
       [true, false, true, false],
-      [true, false, true, false],
-      [true, false, true, false],
-      [true, false, true, false]
+      [true, false, false, true]
     ],
-    statusText: ''
+    statusText: '',
+    timer: 0
   }
 
   submit = () => {
     const isValid = validate(this.state.board)
+    if (isValid) {
+      clearInterval(this.interval)
+    }
     this.setState({
       statusText: isValid ? 'Board is complete!!' : 'Board is invalid :('
     })
   }
 
+  componentDidMount() {
+    this.interval = setInterval(() => {
+      this.setState({ timer: this.state.timer + 1 })
+    }, 1000)
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval)
+  }
+
   render() {
     return (
       <div>
+        <p className="timer">Elapsed Time: {this.state.timer} seconds</p>
         <div className="board">
           {this.state.board.map((row, i) =>
             row.map((number, j) => (
